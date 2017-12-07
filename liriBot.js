@@ -17,8 +17,6 @@ var params = {screen_name: 'LiriDeveloper'};
 
 //spotify information
 var spotify = new Spotify(keys.spotifyKeys);
-//grabs users song input
-var song = process.argv[3];
 
 //switch to know which function user is searching for
 switch(input) {
@@ -54,6 +52,8 @@ function myTweets() {
 //spotify function
 function mySpotify() {
 
+	var song = stringifyInput(process.argv);
+
 	if (!song) {
   			console.log("\nPlease search a song name");
 	} else {
@@ -69,7 +69,7 @@ function mySpotify() {
 		var songInfo = data.tracks.items[i];
 		console.log("\nArtist: " + songInfo.artists[0].name + "\nSong: " + songInfo.name + "\nAlbum: " + songInfo.album.name);
 		
-		if (songInfo.preview_url === "null") {
+		if (songInfo.preview_url === null) {
 			console.log("No preview available");
 		} else {
 			console.log("Song Preview: " + songInfo.preview_url);
@@ -79,9 +79,19 @@ function mySpotify() {
 	}
 };
 
+function stringifyInput(args) {
+	var input = "";
+	for (var i = 3; i < args.length; i++) {
+		input = input + " " + args[i];
+	}
+	return input
+};
+
 function myMovie() {
 
-	var movieName = process.argv[3];
+	var movieName = stringifyInput(process.argv);
+	
+
 	
 	if (!movieName) {
 		movieName = "Mr. Nobody";
@@ -94,12 +104,24 @@ function myMovie() {
 		if (!error && response.statusCode === 200) {
 			var movieInfo = JSON.parse(body)
 			console.log("\nTitle: " + movieInfo.Title + "\nRelease Year: " + movieInfo.Year + "\nIMDb Rating: " + movieInfo.imdbRating
-				+ "\nRotten Tomatoes Rating: " + movieInfo.Ratings[1].Value + "\nCountry Produced: " + movieInfo.Country 
+				+ "\nRotten Tomatoes Rating: " + getRating(movieInfo) + "\nCountry Produced: " + movieInfo.Country 
 				+ "\nLanguage: " + movieInfo.Language + "\nPlot: " + movieInfo.Plot + "\nActors: " + movieInfo.Actors);
 		}
 
 	});
 };
+
+function getRating(movieInfo) {
+	var rating;
+	if (movieInfo.Ratings[1]) {
+		rating = movieInfo.Ratings[1].Value;
+	} else {
+		rating = "No such rating";
+	}
+	
+	return rating;
+
+}
 
 
 //function that displays song information from random.txt

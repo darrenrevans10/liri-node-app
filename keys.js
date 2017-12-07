@@ -1,7 +1,7 @@
 
 var input = process.argv[2];
 
-if (!input || input !== "my-tweets" || input !== "spotify-this-song" || input !== "movie-this" || input !== "do-what-it-says") {
+if (!input || input !== "my-tweets" && input !== "spotify-this-song" && input !== "movie-this" && input !== "do-what-it-says") {
 	console.log('Please search using "my-tweets", "spotify-this-song", "movie-this", or "do-what-it-says"');
 } else {
 	console.log('loading...');
